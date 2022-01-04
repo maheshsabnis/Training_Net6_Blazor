@@ -1,0 +1,129 @@
+﻿<!--1. Define a Page Directive, and other directives so that the component will be used for Execution-->
+
+@page "/employeeform"
+@using Blazor_Wasm.Models
+
+<!--2. Define UI-->
+
+<h3>Employee Form</h3>
+<div class="container">
+    <EditForm Model="@employee">
+        <div class="form-group">
+            <label>Emp No</label>
+            <InputNumber class="form-control" @bind-Value="@employee.EmpNo"></InputNumber>
+           
+        </div>
+        <div class="form-group">
+            <label>Emp Name</label>
+            <InputText class="form-control" @bind-Value="@employee.EmpName"></InputText>
+        </div>
+        <div class="form-group">
+            <label>Dept Name</label>
+            <InputSelect class="form-control" @bind-Value="@employee.DeptName">
+                 <option>Select DeptName</option>
+               @foreach (var dept in Departments)
+               {
+                   <option value="@dept">@dept</option>
+               }
+            </InputSelect>
+             <span>@employee.DeptName</span>
+        </div>
+        <div class="form-group">
+            <label>Designation</label>
+            <InputSelect class="form-control" @bind-Value="@employee.Designation">
+                 <option>Select Designation</option>
+
+               @foreach (var desig in Designations)
+               {
+                   <option value="@desig">@desig</option>
+               }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label>Salary</label>
+            <InputNumber class="form-control" @bind-Value="@employee.Salary"></InputNumber>
+        </div>
+        <div class="btn-group">
+            <input type="button" class="btb btn-primary" value="Clear"
+              @onclick="@ClearInputs"> 
+            <input type="button" class="btb btn-success" value="Save"
+            @onclick="@Save"/> 
+        </div>
+    </EditForm>
+    <br/>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>EmpNo</th>
+                <th>Emp Name</th>
+                <th>Dept Name</th>
+                <th>Designation</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in employees)
+            {
+                <tr @onclick=@(()=>RowClick(emp))>
+                    <td>@emp.EmpNo</td>
+                    <td>@emp.EmpName</td>
+                    <td>@emp.DeptName</td>
+                    <td>@emp.Designation</td>
+                    <td>@emp.Salary</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+
+
+<!--3. Define Logical Model aka code-->
+
+@code {
+    // define Data Members for the Component
+    // Data Properties are always Private
+
+    private Employee employee;
+    private Employees employees;
+
+    private List<string> Departments = new List<string>()
+    {
+        "IT", "HR", "TR", "SL"   
+    };
+
+    private List<string> Designations = new List<string>()
+    {
+        "Manager", "Clerk", "Operator"   
+    };
+
+
+    // IMP***
+    // Always initialize the Object or Reference Members
+    // in the Lifecycle Method
+    // Synchronous Method
+    protected override void OnInitialized()
+    {
+        employee = new Employee();
+        employees = new Employees();
+        base.OnInitialized();
+    }
+
+    private void ClearInputs()
+    {
+        employee = new Employee();
+    }
+
+    private void Save()
+    {
+        employees.Add(employee);
+    }
+
+    private void RowClick(Employee emp)
+    {
+        employee = emp;
+    }
+
+
+}

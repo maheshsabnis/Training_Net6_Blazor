@@ -1,0 +1,22 @@
+﻿@page "/"
+@namespace Blazor_ServerApp.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+<!--The 'App' Component will be loaded based on 
+render-mode property
+ Server: Render the HTML on the server for Blazor Server-Hosted Application
+        -  Responsible to manage the optimize Bootstrapping of the Blazor Server App on the server
+        - The Rendering will takes place only when the user-agent (the request is received) aka Dynamic Execution
+ 
+ServerPrerendered: Used to render the Component as Static HTML and will be responded to the Browser
+                    - Optimized for Rendering
+Static: Pure Static Rendering, used for Static HTML elements e.g. Table, Label, div, etc.
+
+
+The TagHelper 'component' is responsible for generating HTML as string and included in HTTP Response
+
+-->
+
+<component type="typeof(App)" render-mode="ServerPrerendered" />
