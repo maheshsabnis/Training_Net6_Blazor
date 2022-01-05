@@ -19,3 +19,18 @@
 	- Based on the DataSource, this Compoennt MUST generate Table Header and TableRows
 	- This Component MUST have an Event Callback That will Emit the Selected Row Value to its Parent
     - Ref. https://www.webnethelper.com/2021/02/creating-blazor-server-app-for.html
+2. Blazor WebAssembly Application (MUST be ready By Saturday (8-Jan-2022) and Share it to me using your git link )
+	- CReate a ApplicationState object that will contains a collection of 'ShoppedData'
+	- This Collection will be updated using following components
+		- The Component that will show List of Grossaries Material as like below
+			- ItemName, UnitPrice, QuantityPurchased, TotalPriceofSelectedGrossaries
+		- The Component that will show List of Fashion Material as like below
+			- ItemName, UnitPrice, QuantityPurchased, TotalPriceofSelectedGrossaries
+		- The BillComponent That will display details Bill Imformation  as
+			- Table Header will show the BillNo
+			- Table Row will show items as
+				- Grossaries
+				- Fashion item
+			- Table Follter will display the Total Bill
+			- Re: https://www.webnethelper.com/2019/12/using-session-state-in-aspnet-core.html
+		
