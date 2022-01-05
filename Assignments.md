@@ -1,6 +1,6 @@
 # Assignments
 
-# Date: 04-Jan-2021
+# Date: 04-Jan-2022
 
 1. Modify the EmployeeForm Component for the following Requirements (Today)
 	- When the Selected Employee Record is displayed in Text and Select Elemenet, Update the Employee Information and Save it back.
@@ -11,3 +11,11 @@
 2. Create a CheckboxList Component based on the Courses Array Passesed to it
 	- Course Array will contains Course object with peroperties as {CourseName, Fees}
 	- When the End-Use selects Courses, display total fees of selected courses 
+
+# Date: 05-Jan-2022
+
+1. Create a Re-Usable Table Component with the following Specifications (Today) (Refer this Compoennt as DataGrid )
+	- This MUST accept the 'DataSource' Parameter of the type Array
+	- Based on the DataSource, this Compoennt MUST generate Table Header and TableRows
+	- This Component MUST have an Event Callback That will Emit the Selected Row Value to its Parent
+    - Ref. https://www.webnethelper.com/2021/02/creating-blazor-server-app-for.html

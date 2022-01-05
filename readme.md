@@ -31,6 +31,15 @@
 			- InputText, InputNumber, InputCheck, InputRadio, InputSelect
 			- EditForm
 				- Mandatory for Form Elements e.g. InputComponent
+				- Model
+					- Used to bind the CLR Entity Object for Value Updates
+					- OnValidSubmit
+						- Submit the form with the Validation Evaluation loaded on UI Thread 
+					- DataAnnotationValidator
+						- USed to Evaluate the ASnnotation Validation Rules
+					- ValidationSummary
+						- Load the HTML UI for showing validation
+
 			- ComponentBase as a Blase Class
 				- Contain following Feature for Each Component
 					- Property System
@@ -50,6 +59,7 @@
 		- It will be compiled as a Component and willbe used by the application 
 						
 		- Validations
+			- 
 		- Databinding
 			- A Mechanism of Linkink a Data Memeber of the Component with UI Element
 				- @bind-Value for all Input Elements
@@ -65,10 +75,23 @@
 		- Routing
 		- Authentication
 		- Authorization
-	- Component Communication
-		- Custom Events
-	- State-Management aka Sessioning
-		- Client-Side Data Storage
+	- Using Re-Usable Components
+		- Rules for Defining Re-Usable Components
+			- MUST be generic as far as possible
+			- MUST define parameters for the Communication toi accept data from Parent Component
+				- All these parameters MUST be public property
+				- This property MUST be decorated with 'Parameter' Attribute
+			- MUST define Events or EventCallback to Emit Data to parent component
+				- To Emit data from Child to parent, the Handler event MUST be Asynchronous 
+		- Component Communication
+			- Parent-Child Relationship
+				- Parameters and Custom Events
+			- State-Management aka Sessioning
+				- Client-Side Data Storage
+				- Handling Application State		
+		- Auto-Navigate across Components using the 'NavigationManager' class
+			- This is already registred in the WebHostBuilder as a Transient Object
+			- This is the 'NavigateTo(COMPONENT-URL-TO-NAVIGATE)' method
 	- Templates
 	- Server-Side Communication
 		- APIs
@@ -87,6 +110,24 @@
 	- As Web App
 	- As Static App with Git Integration for CI/CD
 
+5. .NET 6, ASP.NET Core 6 Eco-System with Dependency Injection in Blazor WebAssembly
+	- WebAssemblyHostBuilder
+		- The 'Services' property of the type IServiceCollection 
+		- Register Dependencies
+			- IServiceCollection with the 'ServiceDescriptor' class
+				- The ServiceDescriptor class defines instance of dependency with the Lifetime 
+				- Lifetime
+					- Manage the Scope of the Dependency Object so that whne it is injected its data-State will be maintained
+					- Singleton
+						- The Object will live forever till the application is running
+						- To Share data across Components 
+					- Scopped
+						- The Object will be lived for the complete Lifecycle of a Component and its children
+						- For all heavy load objects those are constlier for instantiation e.g. HttpClient 
+					- Transient
+						- The object will be live only for the specific component
+						- An object that is required only for lightweight operations
+		- Inject Dependecnies
 
 
 

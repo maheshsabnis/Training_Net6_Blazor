@@ -1,0 +1,39 @@
+﻿@using Blazor_Wasm.Models
+<h3>Employee Details</h3>
+
+ <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>EmpNo</th>
+                <th>Emp Name</th>
+                <th>Dept Name</th>
+                <th>Designation</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr @onclick="@OnEmployeeSelected">
+                    <td>@emp.EmpNo</td>
+                    <td>@emp.EmpName</td>
+                    <td>@emp.DeptName</td>
+                    <td>@emp.Designation</td>
+                    <td>@emp.Salary</td>
+                </tr>
+             
+        </tbody>
+    </table>
+
+@code {
+    // public property to accept data from the parent component
+    [Parameter]public Employee emp { get; set; }
+    // The Public EventCallback to Emit data to parent
+    [Parameter]public EventCallback<int> EmployeeSelected { get; set; }
+
+    // an event handler
+    async Task OnEmployeeSelected()
+    {
+        // Invoke an event on the Child Component so that it will be subscribed by the parent
+        await EmployeeSelected.InvokeAsync(emp.EmpNo);
+    }
+
+}

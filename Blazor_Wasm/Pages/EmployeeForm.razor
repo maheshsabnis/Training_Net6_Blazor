@@ -7,7 +7,9 @@
 
 <h3>Employee Form</h3>
 <div class="container">
-    <EditForm Model="@employee">
+    <EditForm Model="@employee" OnValidSubmit="@Save">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
         <div class="form-group">
             <label>Emp No</label>
             <InputNumber class="form-control" @bind-Value="@employee.EmpNo"></InputNumber>
@@ -46,12 +48,21 @@
         <div class="btn-group">
             <input type="button" class="btb btn-primary" value="Clear"
               @onclick="@ClearInputs"> 
-            <input type="button" class="btb btn-success" value="Save"
-            @onclick="@Save"/> 
+           @* <input type="button" class="btb btn-success" value="Save"
+            @onclick="@Save"/> *@
+            <input type="submit" value="Save" class="btb btn-success"/>
         </div>
     </EditForm>
     <br/>
-    <table class="table table-bordered table-striped">
+
+    @foreach (var empl in employees)
+    {
+        <!--emp is a parameter and -->
+        <EmployeeDetails emp="empl" EmployeeSelected="@SubScribeToChild"></EmployeeDetails>   
+    }
+
+
+   @* <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>EmpNo</th>
@@ -73,8 +84,7 @@
                 </tr>
             }
         </tbody>
-
-    </table>
+    </table>*@
 </div>
 
 
@@ -84,6 +94,8 @@
 @code {
     // define Data Members for the Component
     // Data Properties are always Private
+
+    // Microsoft.AspNetCore.Components.Forms.DataAnnotationsValidator
 
     private Employee employee;
     private Employees employees;
@@ -125,5 +137,9 @@
         employee = emp;
     }
 
+    private void SubScribeToChild(int empno)
+    {
+        employee = employees.Where(e=>e.EmpNo == empno).FirstOrDefault();
+    }
 
 }
