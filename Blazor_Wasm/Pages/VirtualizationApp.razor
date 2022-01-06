@@ -1,0 +1,96 @@
+﻿@page "/virtualizedata"
+<h3>Data Virtualization</h3>
+
+@if (Employees == null || Employees.Count == 0)
+{
+    <p>
+        <strong>
+            Loading Employees........
+        </strong>
+    </p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>EmpNo</th>
+                <th>EmpName</th>
+                <th>Designation</th>
+            </tr>
+        </thead>
+        <tbody>
+           @* @foreach (var emp in Employees)
+           {
+                <tr>
+                    <td>@emp.EmpNo</td>
+                     <td>@emp.EmpName</td>
+                      <td>@emp.Designation</td>
+                </tr>
+           }*@
+
+           <!--Using Virtialuze Component-->
+           <Virtualize Items="Employees" Context="emp">
+               <tr>
+                    <td>@emp.EmpNo</td>
+                    <td>@emp.EmpName</td>
+                    <td>@emp.Designation</td>
+                </tr>
+           </Virtualize>
+        </tbody>
+    </table>
+
+}
+
+
+@code {
+
+    private List<EmployeeInfo> Employees;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Employees = await GetEmployeesInfo();
+    }
+
+    private async Task<List<EmployeeInfo>> GetEmployeesInfo()
+    {
+        List<EmployeeInfo> details = new List<EmployeeInfo>();
+
+        List<string> designations = new List<string>() {"Director", "Manager", "Lead", "Engineer"};
+
+        int desigIndex = 0;
+        int tempCount = 0;
+        int empCount = 10000;
+
+        for(int i=0; i<=empCount;i++)
+        {
+            // select designation dynamically
+            if(i > tempCount + empCount /designations.Count()  )
+            {
+                desigIndex++;
+                tempCount = i - 1;
+            }
+
+            // Generate Employee Records
+            var employeeDetails = new EmployeeInfo()
+            {
+                EmpNo = i,
+                EmpName = $"Emp - {i.ToString()}",
+                Designation = designations[desigIndex]
+
+            };
+            details.Add(employeeDetails);
+
+        }
+
+        return await Task.FromResult(details);
+    }
+
+
+    public class EmployeeInfo
+    {
+        public int EmpNo {get;set;}
+        public string EmpName {get;set;}
+        public string Designation {get;set;}
+    }
+}

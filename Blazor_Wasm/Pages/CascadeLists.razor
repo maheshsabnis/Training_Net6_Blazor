@@ -1,0 +1,67 @@
+﻿@page "/cascade"
+
+@using Blazor_Wasm.Models;
+
+<h3>CascadeLists</h3>
+<div class="container">
+     <EditForm Model="@city">
+         <div class="form-group"> 
+             <label>Select State</label>
+             <InputSelect class="form-control" Value="StateName"
+              ValueExpression="@(()=>StateName)"
+               ValueChanged="@((string name)=>SelectState(name))"
+             >
+              @foreach (var state in states)
+             {
+                 <option value="@state.StateName">@state.StateName</option>
+             }
+             </InputSelect>
+         </div>
+         <hr/>
+         <strong>
+             Selected State Name -  @StateName
+         </strong>
+         <hr/>
+           <div class="form-group"> 
+             <label>Select State</label>
+             <InputSelect class="form-control" @bind-Value="CityName">
+                 @foreach(var city in filteredCities)
+                {
+                    <option value="@city.CityId">@city.CityName</option>
+                }
+            </InputSelect>
+         </div>
+     </EditForm>
+
+</div>
+@code {
+
+    private List<City> filteredCities;
+
+    private States states;
+    private Cities cities;
+    private City city; 
+    private string StateName = String.Empty;
+    private string CityName = String.Empty;
+
+    protected override void OnInitialized()
+    {
+        city = new City();
+        states = new States();
+        cities = new Cities();
+        filteredCities = cities;
+    }
+
+    void SelectState(string name)
+    {
+        StateName = name;
+        // get a StateId based on name
+        int id =  states.Where(s=>s.StateName == name).FirstOrDefault().StateId;
+        // filter the cities based on StateId
+        filteredCities = cities.Where(c => c.StateId == id).ToList(); ;
+
+
+    }
+
+
+}

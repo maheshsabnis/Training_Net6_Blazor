@@ -59,7 +59,7 @@
 		- It will be compiled as a Component and willbe used by the application 
 						
 		- Validations
-			- 
+		
 		- Databinding
 			- A Mechanism of Linkink a Data Memeber of the Component with UI Element
 				- @bind-Value for all Input Elements
@@ -92,6 +92,67 @@
 		- Auto-Navigate across Components using the 'NavigationManager' class
 			- This is already registred in the WebHostBuilder as a Transient Object
 			- This is the 'NavigateTo(COMPONENT-URL-TO-NAVIGATE)' method
+	- Integration with Existing JavaScript Library or Framework (Used in case of Micro-FrontEnds)
+		- IJSRuntime
+			- Service that is used to integrate the JavaScript Object Model (JSOM) with Blazor
+			- Has the Invoke feature for Invoking JavaScript into the Blazor Apps
+			- Used to Expose the CSharp to JavaScript
+			- Server-Hosted or the Blazor WASM the js file MUST be in wwwroot folder
+			- In Server App: The JS file is loaded using _Layout.Cshtml befoer closing the Body tag
+			- In WASM it will be used by index.html before the closing body tag 
+		- Async Methods
+			- InvokeAsync<T>("STRING-METHOD-NAME-FROM-JS-FILE", Arguments Array)
+				- T is the Type used by thge method for Result returned from the JS method
+				- The ' Arguments Array' will be JSON Serialized and will be provide to JSOM as a Comma-separated List of parameters
+					- E.g. If JS methoid is add(x,y) and Agruments array as 100,200
+						- x will be 100
+						- y will be 200
+			- InvokeVoidAsync()
+				- The JS method that does not return any value	
+		- Recommendations for Invoking JS in Blazor	
+			- In Component create a Wrapper to invoke the JS Methods so that it becomes easy to buind them to UI
+		- JSInvokableAttribute Class
+			- Applied on the C# methods to expose them to JS
+			- Used by dotnet Web Assembly Project
+				- dotnet.x.x.x.js object model
+					- window object of JSOM
+						- Wrap call to CSharp method using 
+							- DotNet.invokeMethodAsync("ASSEMBLY-NAME", "CSHARP-METHOD-NAME")
+			- The Csharp method must be public static method that return a Task Object	
+			- IMP***
+				- When calling CSharp to JS, create a JS window level object, that will contains all Asycn Method those who will call CSharp method
+	- Virtualization
+		- Virtualization Component
+			- A DOM or UI Generation Manager, that is used to optimize the DOM Rendering based on Data Volume by Providing the Virtical Scrolling integration of the Browser's DOM and hence the JSOM that calculated the Vericle scrolling to generate UI
+				- USed Cases
+					- rendering a Large Set of Data Item
+					- Hide most of the part of rendered items
+					- Aut-Calculate the Rendering Size and generate renderting on Demand (i.e. Scrolling Events)
+			- Properties
+				- Items
+					- Get / Set the Fix Source
+				- Context
+					- The Object State that of whihc value used for Rendering the UI
+				- ChildContent
+					- Represent an ItemTemplate that will be used for Generating UI based on Scroll Events
+					- This will be implicitely set
+				- ItemContent
+					- The Portion of the data that will be used in rendering
+				- ItemSize
+					- The UI and Data Rendering sizein pixel (default is 50pixel)
+			- The Component Class  is
+				- Virtualize<T>
+					- T is the class, the data to be virtualize	
+	- Explicit Value Change Events on InputXXXX Componnets e.g. InputText, InputSelect	
+		- Modify the State of an InputSelect based on Change of other InputSelect (aka cascade Eventing with data updates)
+		- Explicit Events with Input Components
+			- ValueChanged
+				- An event that is used to detect a Change event and execute a method that receive the changed value
+			- Value
+				- A Porperty of which value is updated based on the ValueChanged event
+			- ValueExpression
+				- A State of Input Component itself that will implicitely invoke 'StateChanged' event on the Input Componment and modify that Input Component when the ValueChanged event is raised on it  
+				
 	- Templates
 	- Server-Side Communication
 		- APIs

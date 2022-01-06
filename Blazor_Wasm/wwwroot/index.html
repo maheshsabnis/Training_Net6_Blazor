@@ -20,7 +20,23 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
+    <button id="btn">Click Me to Call CS Method</button>
+
     <script src="_framework/blazor.webassembly.js"></script>
+    <!--Load all Third-Party JavaScript Libs-->
+    <script src="Objectjs.js"></script>
+    <script src="CallToCs.js"></script>
+
+    <script>
+        window.onload = function () {
+            document.getElementById('btn').addEventListener('click', function () {
+                callToCSharp.showMessage();
+                callToCSharp.add();
+                callToCSharp.getProducts();
+            }, false)
+        };
+    </script>
 </body>
 
 </html>
