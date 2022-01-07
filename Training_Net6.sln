@@ -6,12 +6,15 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{46A0249C-1D8E-4CDA-B792-A90EBD6A9AE2}"
 	ProjectSection(SolutionItems) = preProject
 		Assignments.md = Assignments.md
+		..\DbSql.sql = ..\DbSql.sql
 		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor_ServerApp", "Blazor_ServerApp\Blazor_ServerApp.csproj", "{BD9E1DD5-FF66-4F14-AC48-E7FE70E517A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor_Wasm", "Blazor_Wasm\Blazor_Wasm.csproj", "{BC438F6C-D633-4240-9935-3A2EC1222CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core_API", "Core_API\Core_API.csproj", "{F7BCB478-1D61-480F-8FDB-63480080AC9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +30,10 @@ Global
 		{BC438F6C-D633-4240-9935-3A2EC1222CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC438F6C-D633-4240-9935-3A2EC1222CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC438F6C-D633-4240-9935-3A2EC1222CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7BCB478-1D61-480F-8FDB-63480080AC9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7BCB478-1D61-480F-8FDB-63480080AC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7BCB478-1D61-480F-8FDB-63480080AC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7BCB478-1D61-480F-8FDB-63480080AC9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

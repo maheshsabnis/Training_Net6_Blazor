@@ -33,4 +33,8 @@
 				- Fashion item
 			- Table Follter will display the Total Bill
 			- Re: https://www.webnethelper.com/2019/12/using-session-state-in-aspnet-core.html
+
+# Date: 07-Jan-2022
+1. Create a API Project with EF Core Db First Approach to Create DAL, The  Create repositoiry, Register DAL and Repository Classes for Department and Employee in DI COntainer and Create Department and Employee APIs
+
 		
