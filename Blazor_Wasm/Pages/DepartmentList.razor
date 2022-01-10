@@ -1,0 +1,47 @@
+﻿@page "/deptlist"
+@using ClientNamespace;
+@inject HttpClient httpClient;
+@inject NavigationManager navigate;
+
+<h3>Department List</h3>
+
+<button @onclick="@navigateToCreate">Create Department</button>
+<hr/>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Dept No</th>
+            <th>Dept Name</th>
+            <th>Capacity</th>
+            <th>Location</th>
+        </tr>
+    </thead>
+    <tbody>
+       @foreach (var dept in departments)
+       {
+          <tr>
+              <td>@dept.DeptNo</td>
+              <td>@dept.DeptName</td>
+              <td>@dept.Capacity</td>
+              <td>@dept.Location</td>
+          </tr>    
+       }
+    </tbody> 
+</table>
+
+@code {
+    private List<Department> departments;
+
+    protected override async Task OnInitializedAsync()
+    {                               // URL of REST API    
+        var client = new ClientProxy("https://localhost:7094/", httpClient);
+        departments = new List<Department>();
+        var res = await client.GetallAsync();
+        departments = res.ToList();
+    }
+
+    void navigateToCreate()
+    {
+        navigate.NavigateTo("/createdept");
+    }
+}

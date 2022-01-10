@@ -37,4 +37,13 @@
 # Date: 07-Jan-2022
 1. Create a API Project with EF Core Db First Approach to Create DAL, The  Create repositoiry, Register DAL and Repository Classes for Department and Employee in DI COntainer and Create Department and Employee APIs
 
+# Date : 10-Jan-2022
+
+1. Create a SPA for Departments and Employees for CRUD Operations using API and Open API Specifications 3.0 Proxy
+	- Create a Component that will Show Links (or buttons) for Department and Employee
+	- When 'Department' button is clicked the DepartmenmtsList component MUST be shown. This component will have Button for Create a New Department. On DepartmenmtsList component, each Table row mujst have Edit and Delete Button. When the 'Edit' button is clicked, then the EditDeptComponent Must be displayed with record to be edited. Once the Create New Department and Edit Department is succefull on 'Save' button of each of corresponding component then Navigate to the DepartmentList component.
+	- repeat this for Employee also.
+2. Create a Search-Component, that will search Employees based on EmpName, DeptName, Designation using Server-Side search facility (Create a API for Server-Side Search) and display the Search result in Blazor Search Component 
+
+
 		

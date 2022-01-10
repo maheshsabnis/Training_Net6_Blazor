@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Core_API.Repositories;
 using Core_API.Models;
+using System.Net.Mime;
 
 namespace Core_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class DepartmentController : ControllerBase
     {
         private readonly IRepository<Department, int> _deptServ;
@@ -15,73 +18,85 @@ namespace Core_API.Controllers
         {
             _deptServ = serv;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        /// <summary>
+        /// OAS 3
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/getall")]
+        public async Task<IEnumerable<Department>> GetAsync()
         {
             try
             {
                 var response = await _deptServ.GetAsync();
-                return Ok(response);
+                return response;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new List<Department>();
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAsync(int id)
+        [HttpGet("getone/{id}")]
+        public async Task<Department> GetAsync(int id)
         {
             try
             {
                 var response = await _deptServ.GetAsync(id);
-                return Ok(response);
+                return  response;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new Department();
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> PostAsync(Department entity)
+        // [HttpPost("{deptno}/{deptname}/{capacity}/{location}")]
+        //public async Task<IActionResult> PostAsync([FromBody]Department entity)
+        //public async Task<IActionResult> PostAsync([FromQuery] Department entity)
+        // public async Task<IActionResult> PostAsync([FromRoute] Department entity)
+        [HttpPost("/createone")]
+        public async Task<Department> PostAsync(Department entity)
         {
             try
             {
                 var response = await _deptServ.CreateAsync(entity);
-                return Ok(response);
+                return response;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new Department();
             }
         }
-        [HttpPut]
-        public async Task<IActionResult> PutAsync(int id,Department entity)
+        [HttpPut("/update/{id}")]
+        public async Task<Department> PutAsync(int id,Department entity)
         {
             try
             {
                 var response = await _deptServ.UpdateAsync(id,entity);
-                return Ok(response);
+                return  response;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new Department();
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAsync(int id)
+        [HttpDelete("/delete/{id}")]
+        public async Task<bool> DeleteAsync(int id)
         {
             try
             {
                 var response = await _deptServ.DeleteAsync(id);
-                return Ok(response);
+                return true;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return false;
             }
         }
+
+
+       
     }
+
+     
 }

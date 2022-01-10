@@ -13,11 +13,20 @@ builder.Services.AddDbContext<CompanyContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppConnStr")); ;
 });
 
+// Define CORS Policy Service
+builder.Services.AddCors(options => {
+    options.AddPolicy("cors", policy => { 
+       policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 
 // Register the Repositories
 builder.Services.AddScoped<IRepository<Department,int>, DepartmentRepository>();
 
-builder.Services.AddControllers();
+// Supress the Default Camesl Casing Serialization for JSON
+builder.Services.AddControllers()
+            .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null) ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -35,6 +44,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Configure the CORS Middleware
+app.UseCors("cors");
 
 app.UseAuthorization(); // default to Anonymous
 

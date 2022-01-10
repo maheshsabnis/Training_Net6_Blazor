@@ -1,0 +1,31 @@
+﻿@page "/createdept"
+
+@using ClientNamespace;
+@inject HttpClient httpClient;
+@inject NavigationManager navigate;
+
+<h3>Create Department</h3>
+<button @onclick="@create">Save</button>
+
+@code {
+    async Task create()
+    {
+        var client = new ClientProxy("https://localhost:7094/", httpClient);
+
+        var dept = new Department()
+            {
+                DeptNo=30, DeptName="SL", Capacity=300, Location="Bangalore"
+            };
+
+        var deptResponse = await client.CreateoneAsync(dept);
+        if (deptResponse != null)
+        {
+            navigate.NavigateTo("/deptlist");
+        }
+
+
+    }
+
+
+
+}

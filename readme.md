@@ -316,13 +316,58 @@
 					- Conflict()
 					- BadRequest()
 					- .... and many more
+			- Httprequest
+				- Request
+					- Request Type Get/Post/Put/Delete, URL Parameters, Headers, Body, etc.
+			- HttpContext
+				- A THread that represents an HTTP Channel 
+				- Manage Application Middlweares
+					- Middlewares are replacement of HttpModule and HttpHandler
+					- Software Components that contains Custom Logic for Http Request to Execute
+					- This contains Global level logic to be executed during request processing e.g.
+					Errors, Loggers, Routing, Security, etc.
+			- HttpResponse
+				- Response
+					- Response Header
+						- STatus Code
+						- Other Header Info
+					- Resource
+						- Body with HTML or JSON
+						- Exception or Error Message
+			- Middlewares Vs Filters
+				- Middlewares are global to the Application
+				- Filters are only for Controllers and Actions Method
+				- IMP*** if you have exceptyion filter and exception Middleware, then Exception Filter will override the exceptoin middleware
+		
 		- ApiControllerAttribute
 			- Map the POST and PUT with the Data send in Http Request Body to the CLR Object aka(Entity)
+
+			- API Model Parameter Binders aka MiodelBinders or ParameterBinders
+			- FromBody
+				- Read Body, Parse it and Map with CLR object for Post and Put Request
+			- FromQuery
+				- Read QueryString, Parse it and Map with CLR object for Post and Put Request
+			- FromRoute
+				- Read Route Expression, Parse it and Map with CLR object for Post and Put Request
+			- FromForm
+				- Read Form Poasted Data (Name:Value Pair), Parse it and Map with CLR object for Post and Put Request
 			- Security
 				- UserBased Security
 				- Role Based Security
 				- Token Based Security
 				- AD Integrations
+	- Using Opan API Specifications 3.0
+		- Define clean and clear HTTP Endpoints for REST APIs
+			- Http method names as URLs
+		- Define Request and Response Formats for EndPoints (Initially released as OpenAPI specification)
+			- ProductsAttribute class
+			- ConsumesAttribute class
+			- These classed works with Media Formats
+		- Define a Proxy Stub Documentation for the REST***
+			- Swagger tool to generate Proxy Class from Swagger JSON Documentation
+				- .NET Core, C# and TypeScript
+			- VS 2019+ Connected Services for API Projects
+			- Download Swagger Code Generator Tool
 	- Consuming API in Blazor WebAssembly Apps
 		- Direct Access
 		- Secure Access
