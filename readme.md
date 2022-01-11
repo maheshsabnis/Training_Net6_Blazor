@@ -338,6 +338,24 @@
 				- Middlewares are global to the Application
 				- Filters are only for Controllers and Actions Method
 				- IMP*** if you have exceptyion filter and exception Middleware, then Exception Filter will override the exceptoin middleware
+				- RequestDelegate and HttpContext
+					- RequestDelegate
+						- Integrate the Middleware Logic into the HTTP Pipeline
+							- Provides IApplicationBuilder contract
+								- Use(), Run()
+									- Use(), to integrate the Middleware into the Pipeline
+									- Run(), to execute the miuddleware when a Situation occurres
+							- UseMiddleware<T>() IApplicationBuilder extension method is uised for Registration and Running the middleware
+								- T is theCustom Milddleware logic whihc is constructor injected using RequestDelegate
+						- Requires an InvokeAsync(HttpContext) method
+							- This method contains logic for Execution in Pipeline
+					- Use-Cases
+						- Custom Exception Handler
+						- Logger
+						- Custom Authentication and Authorization** (Verify the Need first)
+						- Custom Static File Provider (ASP.NET Core MVC)
+							- Custom File Manager for Encryptrio, Decryption, etc.
+
 		
 		- ApiControllerAttribute
 			- Map the POST and PUT with the Data send in Http Request Body to the CLR Object aka(Entity)
@@ -352,10 +370,37 @@
 			- FromForm
 				- Read Form Poasted Data (Name:Value Pair), Parse it and Map with CLR object for Post and Put Request
 			- Security
+				- Microsoft.AspNetCore.Identity
+				- Microsoft.AspNetCore.Identity.EntityFrameworkCore
+					- IdentityDbContext class
+						- Manage the DB Connection for Identity Database
+						- AspNetUsers, AspNetRole, AspNetUsersInRol, etct.
 				- UserBased Security
+					- UserManager<T>, where T is IdentityUser
+						- UserManager<T>: Class to Manage User Creation
+						- IdentityUser: Class to Define Use Info, e.g. Id, Name, Emial, etc.
 				- Role Based Security
+					- RoleManager<T> where T is IdentityRole
+					- RoleManager<T>: Used to Manage Role Creation
+					- IdentityRole: Used to Define Role Information, e.g. Id, Name, etc.
 				- Token Based Security
-				- AD Integrations
+					- System.IdentityModel.Token.Jwt
+						- JsonTokenHandler, USed to Create Token
+					- Microsoft.AspNetCore.Authentication.JwtBearer
+						- USed to Validate the Token in ASP.NET Core
+				- Packages
+					- dotnet add package Microsoft.AspNetCore.Identity
+					- dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+					- dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+					- dotnet add package System.IdentityModel.Tokens.Jwt
+		- Using the Code-First Approach for Generating Database for ASP.NET Identity Tables
+			-  dotnet ef migrations add securityMigrations -c Core_API.Models.SecurityDbContext
+			-  dotnet ef database update -c Core_API.Models.SecurityDbContext
+
+		- Make sure that Controllers (or Action Method in Controllers ) are applied with [Authorize]  Attribute
+
+	
+	- AD Integrations
 	- Using Opan API Specifications 3.0
 		- Define clean and clear HTTP Endpoints for REST APIs
 			- Http method names as URLs

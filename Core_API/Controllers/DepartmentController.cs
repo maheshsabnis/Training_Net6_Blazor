@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Core_API.Repositories;
 using Core_API.Models;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Core_API.Controllers
 {
@@ -10,6 +11,7 @@ namespace Core_API.Controllers
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
+  //  [Authorize]
     public class DepartmentController : ControllerBase
     {
         private readonly IRepository<Department, int> _deptServ;
@@ -23,10 +25,13 @@ namespace Core_API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/getall")]
+        [Authorize(Roles = "Manager,Operator,Clerk")]
         public async Task<IEnumerable<Department>> GetAsync()
         {
             try
             {
+                var currentUser = User.Identity.Name;
+
                 var response = await _deptServ.GetAsync();
                 return response;
             }
@@ -37,6 +42,7 @@ namespace Core_API.Controllers
         }
 
         [HttpGet("getone/{id}")]
+        [Authorize(Roles = "Manager,Operator,Clerk")]
         public async Task<Department> GetAsync(int id)
         {
             try
@@ -54,17 +60,13 @@ namespace Core_API.Controllers
         //public async Task<IActionResult> PostAsync([FromQuery] Department entity)
         // public async Task<IActionResult> PostAsync([FromRoute] Department entity)
         [HttpPost("/createone")]
+        [Authorize(Roles = "Manager,Clerk")]
         public async Task<Department> PostAsync(Department entity)
         {
-            try
-            {
-                var response = await _deptServ.CreateAsync(entity);
+            if (entity.Capacity < 0) throw new Exception("Capacity Can not be -ve");
+            var response = await _deptServ.CreateAsync(entity);
+           
                 return response;
-            }
-            catch (Exception ex)
-            {
-                return new Department();
-            }
         }
         [HttpPut("/update/{id}")]
         public async Task<Department> PutAsync(int id,Department entity)
@@ -81,6 +83,7 @@ namespace Core_API.Controllers
         }
 
         [HttpDelete("/delete/{id}")]
+        [Authorize(Roles = "Manager")]
         public async Task<bool> DeleteAsync(int id)
         {
             try
