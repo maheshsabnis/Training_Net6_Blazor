@@ -7,6 +7,8 @@ using Core_API.Models;
 using Core_API.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,9 +30,70 @@ builder.Services.AddDbContext<SecurityDbContext>(options => {
 builder.Services.AddIdentity<IdentityUser,IdentityRole>()
     .AddEntityFrameworkStores<SecurityDbContext>(); // Use the EF Core for Users and Roles Vetrification
 
+// get the Secret Key for Signeture Verifcation
+byte[] secretKey = Convert.FromBase64String("MNyFyANIvTjwFW2StGH73ez1Rf1jGQD0as9+NxE2cor4wwUapS6J3QCqDWQkxwzs8FW8pFpw/0R69aVD8qsWuA==");
+
+
 // Lets Configure the AuthenticationService
 // Configure the Redirection
-builder.Services.AddAuthentication();
+// Validate the Token and if failed then set the response
+builder.Services.AddAuthentication(authScheme => {
+    // The Authorization Header MUSt have 'bearer' value 
+    authScheme.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    // The Token will be validated based on "Barer Header.Payload.Signeture" format
+    authScheme.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(tokenAuth => {
+     tokenAuth.RequireHttpsMetadata = false;
+    tokenAuth.SaveToken = true; // The Token will be saved in Server's Process which is read for the Validation
+    tokenAuth.TokenValidationParameters = new TokenValidationParameters()
+    {
+        // Validate the token
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+
+    // Subscribe to Events to Provide information about the Token Validations
+    tokenAuth.Events = new JwtBearerEvents()
+    {
+        OnAuthenticationFailed = context =>
+        {
+            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            {
+                context.Response.Headers.Add("Authentication-Token-Expired", "true");
+            }
+            return Task.CompletedTask;
+        }
+    };
+
+}).AddCookie(options => {
+    // Define the UnAuthroized Response to clear the Transient Cookie Generated with the Authentication
+    options.Events.OnRedirectToAccessDenied =
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.FromResult<object>(null);
+    };
+});
+
+// define an Authorization Service for Policies
+
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy("readPolicy", (policy) =>
+    {
+        policy.RequireRole("Manager", "Clerk", "Operator");
+    });
+    options.AddPolicy("writePolicy", (policy) =>
+    {
+        policy.RequireRole("Manager", "Clerk");
+    });
+    options.AddPolicy("managerPolicy", (policy) =>
+    {
+        policy.RequireRole("Manager");
+    });
+}); 
+
 
 
 // Define CORS Policy Service

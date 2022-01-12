@@ -25,7 +25,8 @@ namespace Core_API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("/getall")]
-        [Authorize(Roles = "Manager,Operator,Clerk")]
+      //  [Authorize(Roles = "Manager,Operator,Clerk")]
+      //  [Authorize(Policy = "readPolicy") ]
         public async Task<IEnumerable<Department>> GetAsync()
         {
             try
@@ -42,7 +43,8 @@ namespace Core_API.Controllers
         }
 
         [HttpGet("getone/{id}")]
-        [Authorize(Roles = "Manager,Operator,Clerk")]
+        // [Authorize(Roles = "Manager,Operator,Clerk")]
+      //  [Authorize(Policy = "readPolicy")]
         public async Task<Department> GetAsync(int id)
         {
             try
@@ -60,7 +62,8 @@ namespace Core_API.Controllers
         //public async Task<IActionResult> PostAsync([FromQuery] Department entity)
         // public async Task<IActionResult> PostAsync([FromRoute] Department entity)
         [HttpPost("/createone")]
-        [Authorize(Roles = "Manager,Clerk")]
+        // [Authorize(Roles = "Manager,Clerk")]
+     //   [Authorize(Policy = "writePolicy")]
         public async Task<Department> PostAsync(Department entity)
         {
             if (entity.Capacity < 0) throw new Exception("Capacity Can not be -ve");
@@ -69,6 +72,7 @@ namespace Core_API.Controllers
                 return response;
         }
         [HttpPut("/update/{id}")]
+      //  [Authorize(Policy = "writePolicy")]
         public async Task<Department> PutAsync(int id,Department entity)
         {
             try
@@ -83,7 +87,7 @@ namespace Core_API.Controllers
         }
 
         [HttpDelete("/delete/{id}")]
-        [Authorize(Roles = "Manager")]
+      //  [Authorize(Policy = "managerPolicy")]
         public async Task<bool> DeleteAsync(int id)
         {
             try

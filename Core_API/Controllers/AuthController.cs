@@ -52,16 +52,24 @@ namespace Core_API.Controllers
             if (ModelState.IsValid)
             {
                 var res = await _authService.AuthUser(user);
-                if (res)
-                {
-                    status.Message = $"User {user.UserName} is LoggedIn Successfully.";
-                    status.Status = true;
+                if (res.LoginStatus == LoginStatus.LoginFailed)
+                { 
+                    status = SetResponse(401, "UserName or Password not found", string.Empty, string.Empty);
                     return status;
                 }
-                else 
+                if (res.LoginStatus == LoginStatus.NoRoleToUser)
                 {
-                    status.Message = $"Loginc Failed for User {user.UserName}.";
-                    status.Status = false;
+                    status = SetResponse(401, "UserName is not assugned to role", string.Empty, string.Empty);
+                    return status;
+                }
+                if (res.LoginStatus == LoginStatus.LoginSuccessful)
+                {
+                    status = SetResponse(200, "Login Successful", res.Token, res.Role);
+                    return status;
+                }
+                else
+                {
+                    status = SetResponse(500, "Internal Server Error", string.Empty, string.Empty);
                     return status;
                 }
             }
@@ -69,7 +77,9 @@ namespace Core_API.Controllers
             {
                 status.Message = "UserName or Password Cannot be Empty";
                 return status;
+
             }
+            
         }
         [HttpPost("/createrole")]
         public async Task<ResponseStatus> CreateNewRole(ApplicationRole role)
@@ -109,6 +119,19 @@ namespace Core_API.Controllers
                 return status;
             }
 
+        }
+
+        private ResponseStatus SetResponse(int code, string message, string token, string role)
+        { 
+             ResponseStatus response = new ResponseStatus() 
+             {
+               StatusCode = code,
+               Message = message,
+               Token = token,
+               Role = role
+             };
+
+            return response;
         }
     }
 }

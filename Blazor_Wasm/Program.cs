@@ -1,6 +1,7 @@
 using Blazor_Wasm;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Blazored.SessionStorage;
 // 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 // Register the ApplicationStateContainerService as a Singleton object
 builder.Services.AddSingleton<ApplicationStateContainerService>();
-
+// Add the SessionStorage in DI Container
+builder.Services.AddBlazoredSessionStorage();
 
 await builder.Build().RunAsync();

@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Core_API.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+
 namespace Core_API.Repositories
 {
     public class AuthenticationService
@@ -28,16 +32,47 @@ namespace Core_API.Repositories
             return isCreated;
         }
 
-        public async Task<bool> AuthUser(LoginUser user)
+        public async Task<AuthStatus> AuthUser(LoginUser user)
         {
-            bool isLogin = false;
+            AuthStatus authStatus = new AuthStatus();
+            LoginStatus loginStatus; 
+            string token = string.Empty;
+            string roleName = string.Empty;
             // 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, user.Password, false, lockoutOnFailure: true);
             if (result.Succeeded)
-            { 
-                isLogin = true;
+            {
+                // logic for generating token
+                // 1. Read the UserId
+                var authUser = await _userManager.FindByEmailAsync(user.UserName);
+                // 2. Read the Role(s) for the Authenticated user
+                // This is Role List for the Assigned to User
+                var userRoles = await _userManager.GetRolesAsync(authUser);
+                // if there are no role to the user then signout
+                if (userRoles.Count == 0)
+                {
+                    await _signInManager.SignOutAsync();
+                    // Throw Exception or Inform that the role is not available to the user
+                    loginStatus = LoginStatus.NoRoleToUser;
+                }
+                else
+                {
+                    roleName = userRoles[0];
+                    // generate the token
+                    token = GenerateToken(authUser.Id, roleName);
+                    loginStatus = LoginStatus.LoginSuccessful;
+                }
             }
-            return isLogin;
+            else
+            {
+                loginStatus = LoginStatus.LoginFailed;
+                token = string.Empty;
+            }
+
+            authStatus.LoginStatus = loginStatus;
+            authStatus.Token = token;
+            authStatus.Role=roleName;
+            return authStatus;
         }
         /// <summary>
         /// CreatingRole
@@ -79,6 +114,36 @@ namespace Core_API.Repositories
                 }
             }
             return isRoleAssignedToUser;
+        }
+
+
+        private string GenerateToken(string userId, string roleName)
+        {
+
+            // get the secret key from the byte generated Value
+            var secertKey = Convert.FromBase64String("MNyFyANIvTjwFW2StGH73ez1Rf1jGQD0as9+NxE2cor4wwUapS6J3QCqDWQkxwzs8FW8pFpw/0R69aVD8qsWuA==");
+
+
+            // set the Tokn Metadata
+            var tokenDescriptor = new SecurityTokenDescriptor() 
+            {
+               Issuer = null,
+               Audience = null,
+               Subject = new ClaimsIdentity(new List<Claim>() { 
+                  new Claim("userId", userId),
+                  new Claim("role", roleName)
+               }),
+               Expires = DateTime.UtcNow.AddMinutes(20),
+               IssuedAt = DateTime.UtcNow,
+               NotBefore = DateTime.UtcNow,
+               SigningCredentials= new SigningCredentials(new SymmetricSecurityKey(secertKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            // Generate the token based on the Metadata
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwtToken = jwtHandler.CreateJwtSecurityToken(tokenDescriptor);
+            string token = jwtHandler.WriteToken(jwtToken);
+            return token;
         }
     }
 }

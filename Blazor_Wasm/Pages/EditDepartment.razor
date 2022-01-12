@@ -1,0 +1,28 @@
+﻿@page "/editdept/{id:int}"
+@using ClientNamespace
+@using System.Text.Json
+@inject HttpClient httpClient;
+<h3>Edit Department</h3>
+
+<div class="container">
+    <strong>
+        @JsonSerializer.Serialize(department)
+    </strong>
+</div>
+
+
+@code {
+    // define a Route Parameter property that match with the
+    // name of teh parameter. This should be public
+    [Parameter]public int id {get;set;}
+
+    Department department;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = new ClientProxy("https://localhost:7094/",httpClient);
+
+       department = await client.GetoneAsync(id);
+
+    }
+}

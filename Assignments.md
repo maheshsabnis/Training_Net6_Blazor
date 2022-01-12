@@ -45,5 +45,15 @@
 	- repeat this for Employee also.
 2. Create a Search-Component, that will search Employees based on EmpName, DeptName, Designation using Server-Side search facility (Create a API for Server-Side Search) and display the Search result in Blazor Search Component 
 
+# Date: 12-Jan-2022
+1. Modify the Assignment on Date:10-Jsn-2022 with Secuerity
+	- Create a Security Component this will contains Links for
+		- Create New User
+		- Assign Role To User
+			- Role to User Can be Assigned Only by Administrator
+			- Modify the API Application to create a new AdminRole and AdminUser when the API application runs for the First Time
+				- Note: Use IServivceProvider of WebApplicatioBuidelr to Create New Admin User Using UserManager and Admin Role using RoleManager 
+		- Authenticate User
+
 
 		

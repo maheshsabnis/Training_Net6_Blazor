@@ -383,6 +383,11 @@
 					- RoleManager<T> where T is IdentityRole
 					- RoleManager<T>: Used to Manage Role Creation
 					- IdentityRole: Used to Define Role Information, e.g. Id, Name, etc.
+				- Policy BAssed Authorization
+					- Mechanism to Assembly Multiple Roles into a single Policy and apply this in Pipeline and use it on action methods
+						- The 'Authorization' services define the Policy Condiguration
+						- The 'Authorization' Middleare will load policies in the Pipeline
+						- The 'Authorize' Attribute will verify policies and define execution 
 				- Token Based Security
 					- System.IdentityModel.Token.Jwt
 						- JsonTokenHandler, USed to Create Token
@@ -416,6 +421,12 @@
 	- Consuming API in Blazor WebAssembly Apps
 		- Direct Access
 		- Secure Access
+			- Store the Security Token into the following
+				- LocalStorage
+					- Blazored.LocalStorage
+				- SessionStorage
+					- Blazored.SessionStorage
+				- ApplicationState
 		- AD Security for Blazor Apps and API Apps
 4. Application Deployment
 	- As Web App

@@ -1,0 +1,95 @@
+﻿@page "/security"
+@using SecurityAppNamespace;
+@using System.Text.Json;
+@inject HttpClient httpClient
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage;
+
+
+<h3>Security Component</h3>
+
+<div class="container">
+    <button @onclick="@CreateUser">register New User</button>
+   
+    <br/>
+    <button @onclick="@AssignRoleToUser">Assign Role To User</button>
+    <br/>
+    <button @onclick="@LoginUser">Login</button>
+    <br/>
+    <button @onclick="@GetData">Get Data</button>
+    <hr/>
+     <div class="container">
+        @JsonSerializer.Serialize(responseStatus);
+    </div>
+    <hr/>
+    <div class="container">
+      <strong>
+          Received List of Departments
+          <br/>
+           @JsonSerializer.Serialize(departments);
+      </strong>    
+    </div>
+
+</div>
+
+
+@code {
+
+    RegisterUser registerUser;
+    LoginUser loginUser;
+    ResponseStatus responseStatus;
+    List<Department> departments;
+
+
+    protected override void OnInitialized()
+    {
+
+    }
+
+    async Task CreateUser()
+    {
+        registerUser = new RegisterUser()
+        {
+                Email = "five@msit.com",
+                Password = "P@ssw0rd_",
+                ConfirmPassword = "P@ssw0rd_" 
+        };
+        var client = new SecurityClass("https://localhost:7094/", httpClient);
+        responseStatus = await client.CreateuserAsync(registerUser);
+    }
+
+    async Task AssignRoleToUser()
+    {
+        var userRole = new UserRole()
+            {
+
+                RoleName = "Manager",
+                UserName = "four@msit.com"
+              };
+        var client = new SecurityClass("https://localhost:7094/", httpClient);
+        responseStatus = await client.AssignusrtoroleAsync(userRole);
+
+    }
+
+    async Task LoginUser()
+    {
+        loginUser = new LoginUser()
+            {
+                UserName = "five@msit.com", Password = "P@ssw0rd_"
+            };
+        var client = new SecurityClass("https://localhost:7094/", httpClient);
+        responseStatus = await client.AuthuserAsync(loginUser);
+        // save the token in Session Storage
+        await sessionStorage.SetItemAsync<string>("Token", responseStatus.Token);
+
+    }
+    async Task GetData()
+    {
+        // Read the Token from the Session STorage
+        var token = await sessionStorage.GetItemAsync<string>("Token");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        var client = new SecurityClass("https://localhost:7094/", httpClient);
+
+        var resData = await client.GetallAsync();
+        departments = resData.ToList();
+    }
+}

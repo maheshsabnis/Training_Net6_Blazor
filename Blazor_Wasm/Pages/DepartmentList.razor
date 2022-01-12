@@ -24,6 +24,9 @@
               <td>@dept.DeptName</td>
               <td>@dept.Capacity</td>
               <td>@dept.Location</td>
+              <td>
+                  <input type="button" value="Edit" @onclick="@(()=>navigateToEdit(dept.DeptNo))"/>
+              </td> 
           </tr>    
        }
     </tbody> 
@@ -44,4 +47,10 @@
     {
         navigate.NavigateTo("/createdept");
     }
+
+    void navigateToEdit(int id)
+    {
+        navigate.NavigateTo($"/editdept/{id}");
+    }
+
 }
