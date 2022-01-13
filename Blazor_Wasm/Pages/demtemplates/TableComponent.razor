@@ -1,0 +1,27 @@
+﻿@typeparam TModel
+@* Header and Rows will be generated based on data received from the Parent
+    @Rows(item), The RenderFragment will use the Reflection and its PorpertyInfo class
+    to Read properties from DataSource received from the parent and generate Rows 
+*@
+<table class="table table-bordreed table-striped">
+    <thead>
+        <tr>
+            @Headers
+        </tr>
+    </thead>
+    <tbody>
+       @foreach (var item in DataSource)
+       {
+            <tr>
+                @Rows(item)
+            </tr>    
+       }
+    </tbody>
+</table>
+
+@code {
+    // define [Parameter] to accept data 
+    [Parameter] public RenderFragment Headers { get; set; } 
+    [Parameter] public RenderFragment<TModel> Rows { get; set; } 
+    [Parameter] public IEnumerable<TModel> DataSource { get; set; } 
+}

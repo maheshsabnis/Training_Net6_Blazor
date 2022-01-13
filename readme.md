@@ -418,7 +418,73 @@
 				- .NET Core, C# and TypeScript
 			- VS 2019+ Connected Services for API Projects
 			- Download Swagger Code Generator Tool
-	- Consuming API in Blazor WebAssembly Apps
+	- Blazor WASM Lazy Loading
+		- Add a new Razor Library Project
+		- Created Components and any other logic
+		- Add reference of the Razor Library Project in the WASM Project
+		- Modify the .csproj file of thew WASM Project for settings the Razor Library as Lazy Loadd Assembly
+		
+		<ItemGroup>
+			<BlazorWebAssemblyLazyLoad Include="Products_LazyLoad.dll" />
+		</ItemGroup>
+		- LazyAssemblyLoader
+			- The class is injected in the App.razor so that Router Compoennt can used it to route to the Components from Lazyli Loaded Assemblies
+				- Namespace:Microsoft.AspNetCore.Components.WebAssembly.Services
+				- LazyAssemblyLoader: Is constructior injected with IJSRuntime to interact with the balzor.webassembly.js aznd hance with blazor.boot.json to read the 'lazyAssembly' property to discover the assembly to loaded lazily
+			- <Router AppAssembly="@typeof(App).Assembly"
+						OnNavigateAsync="OnNavigationAsync"
+						AdditionalAssemblies="lazyAssemblies"
+					>			
+					- Router Component will provide default navigation for all Components in the Current Assembly (typeof(App).Assembly) using the 'AppAssembly' property
+					- While using the LAzyLoading for Assemblies set following properties
+						-  AdditionalAssemblies: List of All Assemblies those defined as 'BlazorWebAssemblyLazyLoad' in Projerct file. Components from these assemblies will be used for Navigation using the ''OnNavigateAsync' property
+						- OnNavigateAsync: This is Bind with the method that is used to define routing using the 'NavigationContext' type parametetr passed to the method
+
+		- CascadingValue
+			- The Component that is used to define a Lifecycle to a public property from Parent to All of its Children
+				- COntains  Children Components to share data to them
+				- Each Child in the Tree MUST have public property applied with the CascaseParameterAttribute to collect the data
+			- CascadingParameterAttribute
+				- Used by Each Child (Child and Grdi Children) as a Decorator on its public properties to accept data from the Parent
+			- ADV
+				- A Common Set of data is present across all components in the Tree
+				- This can be used to implementg common Look & Feel to all Components in a tree
+					- E.g. Share Same Style for 
+						- Fonts, Colors, etc for all Buttons from Parent to Child
+			- Two Strategies of Sharing the data from OParent to Child
+				- Same Property Name from Parent to Child
+				- Same Porperty Type from Parent to Child
+			- Properties of CascadingValue
+				- RenderFragment? ChildContent
+					- Define a Template to render various Children Components
+					- The 'ChildContent' can contain other CascadingValue inside it to pass multiple different property values to Children
+					- <CascadingValue Value="">
+						<CascadingValue Value="" Name="NAME-APPLIED-ON-PROPERTY-TO-SHARE-TO-CHILD">
+						   <CascadingValue Value="">
+						      <ChildComponent/>
+						   </CascadingValue>
+						</CascadingValue>
+					 </CascadingValue>
+					 - The 'Name' will be set by the CascadingValue to pass data from Parent to child so that the child has to use this Name to receive the data
+				- TValue? Value
+					- Valeu to send from Parent to Child
+				- string? Name
+					- The Custom Name that is defined for the data to be send to Children from the parent
+					- Each Child Component (and hence grand Children)MUST subscribe to this Name to receive the data
+				bool IsFixed
+					- Can we update values from Child to parent 
+					- Default is false
+			- Properties of CascadingParameterAttribute
+				- string? Name
+					- This will be used to MAP with the same Name property definition from the parent to receive data
+			- RenderFragment
+				- The Delegate that will be used to Execue The 'RenderTreeBuilder' to define Rendering of the component
+				- We can use this to build the Custom UI Templates those can be used by Components instead of component creating same Markup again and again  
+				- The template accept parameter using '@typeparam' ditrective, the parameter is mostly generic
+
+				- The Template defined using the RenderFragment provide '@context' proeprty that represents the data to send to the Template
+
+		- Consuming API in Blazor WebAssembly Apps
 		- Direct Access
 		- Secure Access
 			- Store the Security Token into the following

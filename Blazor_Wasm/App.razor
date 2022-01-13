@@ -1,4 +1,17 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@*Modification of the code for the lazy loading*@
+
+@*The will provide an access for the 'Assembly' class *@
+@using System.Reflection;
+
+@* Using the following namespace to Support the Assembly Lookup for Lazy Loading *@
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
+
+@inject LazyAssemblyLoader assemblyLoader;
+
+<Router AppAssembly="@typeof(App).Assembly"
+    OnNavigateAsync="OnNavigationAsync"
+    AdditionalAssemblies="lazyAssemblies"
+>
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -10,3 +23,30 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    // Code to make the LazyAssemblyLoader class perform its job
+
+    private List<Assembly> lazyAssemblies = new List<Assembly>();
+    /// <summary>
+    /// NavigationContext: The class used to represent the Current Route Navigation
+    /// This represents the Route URL, Parameters, Component Class to route to
+    /// </summary>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    private async Task OnNavigationAsync(NavigationContext context)
+    {
+        // Define a logic for Navigation by verifing the 'path' property  
+        // of the Navigation Context using the Router Component 
+
+        if (context.Path == "fetchproducts")
+        {
+            // based on the path, add the Assembly into the lazyAssemblies collection 
+            var assemblies = await assemblyLoader.LoadAssembliesAsync(new []{ "Products_LazyLoad.dll" });
+            // the lazy loaded assembly is now added into the assembly collection which is bound with Router
+            // Compoponent
+            lazyAssemblies.AddRange(assemblies);
+        }
+
+    }
+}

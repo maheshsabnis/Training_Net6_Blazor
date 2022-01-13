@@ -1,0 +1,30 @@
+﻿@page "/grandchailc"
+<h3>Grand Child Component</h3>
+
+<div class="container">
+    <strong>I am a Grand-Child and I will be receiving data from Gran Parent using the 'SAME DATATYPE' 
+        property value</strong>
+        <hr/>
+        <input type="button" value="BTN" style="@ButtonStyle"
+          @onclick="UpdateMessage"/>
+        <hr/>
+        <div class="container">
+            <strong>
+                Value Received from the Parent is = @ReceivedMessage
+            </strong>
+        </div>
+</div>
+
+
+@code {
+    [CascadingParameter]
+    public string ButtonStyle { get; set; }
+
+    [CascadingParameter(Name="msg")]
+    public string ReceivedMessage { get;set;}
+
+     void UpdateMessage()
+    {
+        ReceivedMessage = "Hay!!!, I am Updated From Grand Child";
+    }
+}

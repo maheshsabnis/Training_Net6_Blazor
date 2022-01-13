@@ -1,0 +1,15 @@
+﻿@page "/chaildc"
+<h3>Chaild Component</h3>
+
+<div class="container" style="@DivStyle">
+    <strong>I am a Child Component receiving data from the Parent using 'SAME DATAYPE' property</strong>
+    <hr/>
+    <!--Rendering the Grand Child Component-->
+    <GrandChildComponent></GrandChildComponent>
+</div>
+
+@code {
+    // define a property having same 'Data-Type' as of the parenmt to receivd the data
+    [CascadingParameter]
+    public string DivStyle { get; set; }
+}

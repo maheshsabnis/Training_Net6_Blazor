@@ -1,0 +1,24 @@
+﻿@page "/fetchproducts"
+@using System.Text.Json
+@using System.Net.Http
+<h3>Fetch Products</h3>
+
+<div>
+    <strong>
+        Received Products Data
+        <hr/>
+        @productsJsonData
+    </strong>
+</div>
+
+
+@code {
+    private string productsJsonData = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        HttpClient client = new HttpClient();
+
+        productsJsonData = 
+        await client.GetStringAsync("https://apiapptrainingnewapp.azurewebsites.net/api/Products");
+    }
+}

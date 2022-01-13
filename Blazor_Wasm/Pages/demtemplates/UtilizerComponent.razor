@@ -1,0 +1,46 @@
+﻿@page "/utilizer"
+<h3>Utilizer Component for Template Created using RenderFragment</h3>
+<!--Using the TableComponent Template-->
+<TableComponent DataSource="products">
+    <Headers>
+         <th>Product Id</th>
+         <th>Product Name</th>
+         <th>Price</th>
+    </Headers>
+    <Rows>
+        <td>
+            @context.ProductId
+        </td>
+        <td>
+            @context.ProductName
+        </td>
+        <td>
+            @context.Price
+        </td>
+    </Rows>
+</TableComponent>
+
+
+@code {
+    private List<Product> products;
+
+    protected override void OnInitialized()
+    {
+        products = new List<Product>()
+            {
+                new Product(){ ProductId=1, ProductName="P1", Price=1100},
+                new Product(){ ProductId=2, ProductName="P2", Price=1200},
+                new Product(){ ProductId=3, ProductName="P3", Price=1300}
+            };
+
+    }
+
+
+    public class Product
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public int Price { get; set; }
+    }
+
+}

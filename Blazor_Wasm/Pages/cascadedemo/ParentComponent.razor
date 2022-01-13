@@ -1,0 +1,28 @@
+﻿@page "/parentc"
+<h3>Parent Component</h3>
+<button @onclick="UpdateMessage">Update Message</button>
+<div class="conmtainer">
+    <strong>
+        @Message
+    </strong>
+</div>
+
+<CascadingValue Value="@Color">
+     <CascadingValue Value="@Message" Name="msg">
+         <ChaildComponent></ChaildComponent>   
+     </CascadingValue>
+</CascadingValue>
+
+
+
+@code {
+    public string Color { get; set; } = "color:blue";
+    public string Message { get; set; } = "Hello, I am Message from the Parent";
+
+    void UpdateMessage()
+    {
+        
+        Message = "Hay!!!, I am Updated From Parent";
+    }
+
+}
