@@ -37,7 +37,7 @@
 
     protected override async Task OnInitializedAsync()
     {                               // URL of REST API    
-        var client = new ClientProxy("https://localhost:7094/", httpClient);
+        var client = new ClientProxy("https://coreapiappservicecxd.azurewebsites.net/", httpClient);
         departments = new List<Department>();
         var res = await client.GetallAsync();
         departments = res.ToList();

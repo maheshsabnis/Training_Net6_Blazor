@@ -10,11 +10,11 @@
 @code {
     async Task create()
     {
-        var client = new ClientProxy("https://localhost:7094/", httpClient);
+        var client = new ClientProxy("https://coreapiappservicecxd.azurewebsites.net/", httpClient);
 
         var dept = new Department()
             {
-                DeptNo=30, DeptName="SL", Capacity=300, Location="Bangalore"
+                DeptNo=32, DeptName="SL2", Capacity=400, Location="Bangalore"
             };
 
         var deptResponse = await client.CreateoneAsync(dept);

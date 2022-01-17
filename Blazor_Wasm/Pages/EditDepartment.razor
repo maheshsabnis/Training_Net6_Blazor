@@ -20,7 +20,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var client = new ClientProxy("https://localhost:7094/",httpClient);
+        var client = new ClientProxy("https://coreapiappservicecxd.azurewebsites.net/",httpClient);
 
        department = await client.GetoneAsync(id);
 
